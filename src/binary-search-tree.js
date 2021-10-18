@@ -5,7 +5,7 @@ const { NotImplementedError } = require("../extensions/index.js");
 /**
  * Implement simple binary search tree according to task description
  * using Node from extensions
- */
+ 
 
 module.exports = class BinarySearchTree {
   root() {
@@ -13,38 +13,38 @@ module.exports = class BinarySearchTree {
     // remove line with error and write your code here
   }
 
-  add(/* data */) {
+  add(data) {
     throw new NotImplementedError("Not implemented");
     // remove line with error and write your code here
   }
 
-  has(/* data */) {
+  has(data) {
     throw new NotImplementedError("Not implemented");
     // remove line with error and write your code here
   }
 
-  find(/* data */) {
+  find(data) {
     throw new NotImplementedError("Not implemented");
     // remove line with error and write your code here
   }
 
-  remove(/* data */) {
+  remove(data) {
     throw new NotImplementedError("Not implemented");
     // remove line with error and write your code here
   }
 
   min() {
     throw new NotImplementedError("Not implemented");
-    // remove line with error and write your code here
+  
   }
 
   max() {
     throw new NotImplementedError("Not implemented");
-    // remove line with error and write your code here
+  
   }
 };
+*/
 
-/* 
 class Node {
   constructor(value) {
     this.data = value;
@@ -151,52 +151,61 @@ module.exports = class BinarySearchTree {
         current = current.right;
       }
     }
-  } * / ЗДЕСЬ УБРАТЬ ПРОБЕЛ
+  } */
+
+  minNode(node) {
+    // если слева от узла ноль тогда это должен быть минимальный узел
+    if (node.left === null) return node;
+    else return this.minNode(node.left); //исправила findMinNode(node.left) na minNode
+  }
 
   remove(data) {
-    this.treeRoot = this.removeNode(this.treeRoot, data);
+    this.treeRoot = this.removeNode(this.treeRoot, data); // helper method below
   }
 
-  removeNode(current, data) {
-    if (current === null) return current;
-    if (data === current.data) {
-      // for case 1 and 2, node without child or with one child
-
-      if (current.left === null && current.right === null) {
-        return null;
-      } else if (current.left === null) {
-        return current.right;
-      } else if (current.right === null) {
-        return current.left;
-      } else {
-        let tempNode = this.kthSmallestNode(current.right);
-        current.data = tempNode.data;
-        current.right = this.removeNode(current.right, tempNode.data);
-        return current;
-      }
-    } else if (data < current.data) {
-      current.left = this.removeNode(current.left, data);
-      return current;
+  removeNode(node, data) {
+    if (node === null) {
+      return null;
+      // если данные, которые нужно удалить, меньше, чем данные корня, переходим к левому поддереву
+    } else if (data < node.data) {
+      node.left = this.removeNode(node.left, data);
+      return node;
+      // если данные, которые нужно удалить, больше, чем данные корня, переходим к правому поддереву
+    } else if (data > node.data) {
+      node.right = this.removeNode(node.right, data);
+      return node;
+      // если данные такие как данные корня, удаляем узел
     } else {
-      current.right = this.removeNode(current.right, data);
-      return current;
+      // удаляем узел без потомков (листовой узел (leaf) или крайний)
+      if (node.left === null && node.right === null) {
+        node = null;
+        return node;
+      }
+      // удаляем узел с одним потомком
+      if (node.left === null) {
+        node = node.right;
+        return node;
+      } else if (node.right === null) {
+        node = node.left;
+        return node;
+      }
+      // удаляем узел с двумя потомками
+      // minNode правого поддерева хранится в новом узле
+      let newNode = this.minNode(node.right);
+      node.data = newNode.data;
+      node.right = this.removeNode(node.right, newNode.data);
+      return node;
     }
-  }
-
-  kthSmallestNode(node) {
-    while (!node.left === null) node = node.left;
-    return node;
   }
 
   min() {
     let current = this.treeRoot;
-    if (current == null) return null;
+    if (current === null) return null;
     let min = this.treeRoot.data;
-    while (current) {
+    while (current.left) {
       if (current.left != null) {
         min = current.left.data;
-      } else {
-        current = null;
+        current = current.left;
       }
     }
     return min;
@@ -204,16 +213,14 @@ module.exports = class BinarySearchTree {
 
   max() {
     let current = this.treeRoot;
-    if (current == null) return null;
-    let max = current.data;
-    while (current) {
+    if (current === null) return null;
+    let max = this.treeRoot.data;
+    while (current.right) {
       if (current.right != null) {
         max = current.right.data;
-      } else {
-        current = null;
+        current = current.right;
       }
     }
     return max;
   }
 };
-*/
